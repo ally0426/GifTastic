@@ -56,11 +56,11 @@
                     var animalDiv = $("<div class='animal'>");
 
                     var rating = response.data.rating;
-                    var pOne = $("<p>").text("Rating: " + rating);
-                    animalDiv.append(pOne);
+                    var p = $("<p>").text("Rating: " + rating);
+                    animalDiv.append(p);
 
-                    imgURL = response.data.images.original_still.url;
-                    imgURL_animate = response.data.images.original.url;
+                    var imgURL = response.data.images.original_still.url;
+                    var imgURL_animate = response.data.images.original.url;
                     var image = $("<img class='animalImg'>").attr("src", imgURL).attr("data-still", imgURL).attr("data-animate", imgURL_animate).attr("data-state", "still");
                     animalDiv.append(image);
 
