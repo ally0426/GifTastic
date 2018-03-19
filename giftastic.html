@@ -60,7 +60,8 @@
                     animalDiv.append(pOne);
 
                     imgURL = response.data.images.original_still.url;
-                    var image = $("<img class='animalImg'>").attr("src", imgURL);
+                    imgURL_animate = response.data.images.original.url;
+                    var image = $("<img class='animalImg'>").attr("src", imgURL).attr("data-still", imgURL).attr("data-animate", imgURL_animate).attr("data-state", "still");
                     animalDiv.append(image);
 
                     $("#animals-view").prepend(animalDiv);
@@ -109,11 +110,15 @@
             $(".animalImage").on("click", function (event) {
                 event.preventDefault();
                 // set the image url into the animaled url
-                imageURL = response.data.images.original.url;
-                var image = $("<img class='animalImg'>").attr("src", imgURL);
-                animalDiv.append(image);
 
-                $("#animals-view").prepend(animalDiv);
+                if (state === "still") {
+                    $(this).attr("src", $(this).attr("data-animate"));
+                    $(this).attr("data-state", "animate");
+                } else {
+                    $(this).attr("src", $(this).attr("data-still"));
+                    $(this).attr("data-state", "still");
+                }
+
 
             });
 
