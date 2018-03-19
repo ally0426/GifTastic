@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Favorite animals</title>
+    <style type="text/css">
+        button,
+        div,
+        form,
+        input {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Animal Search</h1>
+
+        <!-- Rendered buttons will get dumped Here  -->
+        <div id="buttons-view"></div>
+
+        <form id="animal-form">
+            <label for="animal-input">Add Animal</label>
+            <input type="text" id="animal-input">
+            <br>
+
+            <!-- Button triggers new animal to be added -->
+            <input id="add-animal" type="submit" value="Add Animal">
+        </form>
+
+        <!-- animals will get dumped here -->
+        <div id="animals-view"></div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script type="text/javascript">
+            // Initial array of animals
+            var animals = ["Cats", "Dogs", "Rabbits", "Horses"];
+            var imgURL;
+            // displayanimalInfo function re-renders the HTML to display the appropriate content
+            function displayanimalInfo() {
+                //
+                var animal = $(this).data("name");
+                var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&limit=10&q=" + name;
+
+
+                $.ajax({
+                    url: queryURL,
+                    method: "GET"
+                }).then(function (response) {
+                    console.log(queryURL);
+                    console.log(response);
+
+                    var animalDiv = $("<div class='animal'>");
+
+                    var rating = response.data.rating;
+                    var pOne = $("<p>").text("Rating: " + rating);
+                    animalDiv.append(pOne);
+
+                    imgURL = response.data.images.original_still.url;
+                    var image = $("<img class='animalImg'>").attr("src", imgURL);
+                    animalDiv.append(image);
+
+                    $("#animals-view").prepend(animalDiv);
+
+                });
+
+            }
+            // Function for displaying animal data
+            function renderButtons() {
+
+                // Deletes the animals prior to adding new animals
+                // (this is necessary otherwise you will have repeat buttons)
+                $("#buttons-view").empty();
+
+                // Loops through the array of animals
+                for (var i = 0; i < animals.length; i++) {
+
+                    // Then dynamicaly generates buttons for each animal in the array
+                    // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+                    var a = $("<button>");
+                    // Adds a class of animal to our button
+                    a.addClass("animal");
+                    // Added a data-attribute
+                    a.attr("data-name", animals[i]);
+                    // Provided the initial button text
+                    a.text(animals[i]);
+                    // Added the button to the buttons-view div
+                    $("#buttons-view").append(a);
+                }
+            }
+
+            // This function handles events where the add animal button is clicked
+            $("#add-animal").on("click", function (event) {
+                event.preventDefault();
+                // This line of code will grab the input from the textbox
+                var animal = $("#animal-input").val().trim();
+
+                // The animal from the textbox is then added to our array
+                animals.push(animal);
+
+                // Calling renderButtons which handles the processing of our animal array
+                renderButtons();
+
+            });
+
+            $(".animalImage").on("click", function (event) {
+                event.preventDefault();
+                // set the image url into the animaled url
+                imageURL = response.data.images.original.url;
+                var image = $("<img class='animalImg'>").attr("src", imgURL);
+                animalDiv.append(image);
+
+                $("#animals-view").prepend(animalDiv);
+
+            });
+
+
+            // Adding click event listeners to all elements with a class of "animal"
+            $(document).on("click", ".animal", displayanimalInfo);
+
+            // Calling the renderButtons function to display the intial buttons
+            renderButtons();
+        </script>
+    </div>
+</body>
+
+</html>
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <title>The Magical Cat Button</title>
+</head>
+
+<body>
+    <button id="cat-button">magical cat button</button>
+    <div id="images">
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        //
+        $("#cat-button").on("click", function () {
+
+            //
+            var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cats";
+
+            //
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
+
+                //
+                .then(function (response) {
+                    console.log(response);
+                    //
+                    var imageUrl = response.data.image_original_url;
+
+                    //
+                    var catImage = $("<img>");
+
+                    //
+                    catImage.attr("src", imageUrl);
+                    catImage.attr("alt", "cat image");
+
+                    //
+                    $("#images").prepend(catImage);
+                });
+        });
+    </script>
+</body>
