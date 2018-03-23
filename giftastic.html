@@ -2,134 +2,146 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <title>Favorite animals</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <title>Zoo</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+
     <style type="text/css">
+
+    body {
+        background-image: url("https://www.comedy.co.uk/images/library/comedies/900x450/t/the_zoo_logo.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        color: #000;
+    }
+
+    .container {
+        z-index: 99;
+    }
         button,
         div,
         form,
         input {
             margin: 10px;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        button,
+        #addSearch,
+        #reset {
+            background-color: orange;
         }
     </style>
+
 </head>
 
 <body>
 
-    <div class="container">
-        <h1>Animal Search</h1>
+    <div class="container text-center">
+        <div id="buttonsArea"></div>
 
-        <!-- Rendered buttons will get dumped Here  -->
-        <div id="buttons-view"></div>
-
-        <form id="animal-form">
-            <label for="animal-input">Add Animal</label>
-            <input type="text" id="animal-input">
+        <form id="search-form">
+            <label for="searchInput">Add Animal</label>
+            <input type="text" id="searchInput">
             <br>
-
-            <!-- Button triggers new animal to be added -->
-            <input id="add-animal" type="submit" value="Add Animal">
+            <input type="submit" value="Submit" id="addSearch">
+            <input type="submit" value="Reset" id="reset">
         </form>
 
-        <!-- animals will get dumped here -->
-        <div id="animals-view"></div>
+        <div id="searchResults"></div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script type="text/javascript">
-            // Initial array of animals
-            var animals = ["Cats", "Dogs", "Rabbits", "Horses"];
-            var imgURL;
-            // displayanimalInfo function re-renders the HTML to display the appropriate content
-            function displayanimalInfo() {
-                //
-                var animal = $(this).data("name");
-                var queryURL = "https://api.giphy.com/v1/gifs/search?api_key=dc6zaTOxFJmzC&limit=10&q=" + name;
-
-
-                $.ajax({
-                    url: queryURL,
-                    method: "GET"
-                }).then(function (response) {
-                    console.log(queryURL);
-                    console.log(response);
-
-                    var animalDiv = $("<div class='animal'>");
-
-                    var rating = response.data.rating;
-                    var p = $("<p>").text("Rating: " + rating);
-                    animalDiv.append(p);
-
-                    var imgURL = response.data.images.original_still.url;
-                    var imgURL_animate = response.data.images.original.url;
-                    var image = $("<img class='animalImg'>").attr("src", imgURL).attr("data-still", imgURL).attr("data-animate", imgURL_animate).attr("data-state", "still");
-                    animalDiv.append(image);
-
-                    $("#animals-view").prepend(animalDiv);
-
-                });
-
-            }
-            // Function for displaying animal data
-            function renderButtons() {
-
-                // Deletes the animals prior to adding new animals
-                // (this is necessary otherwise you will have repeat buttons)
-                $("#buttons-view").empty();
-
-                // Loops through the array of animals
-                for (var i = 0; i < animals.length; i++) {
-
-                    // Then dynamicaly generates buttons for each animal in the array
-                    // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-                    var a = $("<button>");
-                    // Adds a class of animal to our button
-                    a.addClass("animal");
-                    // Added a data-attribute
-                    a.attr("data-name", animals[i]);
-                    // Provided the initial button text
-                    a.text(animals[i]);
-                    // Added the button to the buttons-view div
-                    $("#buttons-view").append(a);
-                }
-            }
-
-            // This function handles events where the add animal button is clicked
-            $("#add-animal").on("click", function (event) {
-                event.preventDefault();
-                // This line of code will grab the input from the textbox
-                var animal = $("#animal-input").val().trim();
-
-                // The animal from the textbox is then added to our array
-                animals.push(animal);
-
-                // Calling renderButtons which handles the processing of our animal array
-                renderButtons();
-
-            });
-
-            $(".animalImg").on("click", function (event) {
-                event.preventDefault();
-                // set the image url into the animaled url
-
-                if (state === "still") {
-                    $(this).attr("src", $(this).attr("data-animate"));
-                    $(this).attr("data-state", "animate");
-                } else {
-                    $(this).attr("src", $(this).attr("data-still"));
-                    $(this).attr("data-state", "still");
-                }
-
-
-            });
-
-
-            // Adding click event listeners to all elements with a class of "animal"
-            $(document).on("click", ".animal", displayanimalInfo);
-
-            // Calling the renderButtons function to display the intial buttons
-            renderButtons();
-        </script>
     </div>
+
+
+
+    <script>
+
+        $(function reset() {
+            populateButtons(topics, "searchButton", "#buttonsArea");
+        });
+
+        var topics = ["DOG", "CAT", "BIRD"];
+
+        function populateButtons(searchArray, classToAdd, areaToAddTo) {
+            $(areaToAddTo).empty();
+            for (var i = 0; i < searchArray.length; i++) {
+                var a = $("<button>");
+                a.addClass(classToAdd);
+                a.attr("data-type", searchArray[i]);
+                a.text(searchArray[i].toUpperCase());
+                $(areaToAddTo).append(a);
+            }
+        }
+
+        $(document).on("click", ".searchButton", function () {
+            var type = $(this).data("type");
+            console.log(this);
+
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).done(function (response) {
+                console.log(response);
+
+                for (var i = 0; i < response.data.length; i++) {
+
+                    var searchDiv = $("<div class='search-item'>");
+
+                    var rating = response.data[i].rating;
+                    var p = $("<p>").text("Rating: " + rating);
+
+                    var animated = response.data[i].images.fixed_height.url;
+                    var still = response.data[i].images.fixed_height_still.url;
+                    var image = $("<img>");
+                    image.attr("src", still);
+                    image.attr("data-still", still);
+                    image.attr("data-animated", animated);
+                    image.attr("data-state", "still");
+                    image.addClass("searchImage");
+
+                    searchDiv.append(p);
+                    searchDiv.append(image);
+
+                    $("#searchResults").prepend(searchDiv);
+                }
+            });
+        });
+
+        $(document).on("click", ".searchImage", function () {
+            var state = $(this).attr("data-state");
+            if (state == "still") {
+                $(this).attr("src", $(this).data("animated"));
+                $(this).attr("data-state", "animated");
+            } else {
+                $(this).attr("src", $(this).data("still"));
+                $(this).attr("data-state", "still");
+            }
+        });
+
+        $("#addSearch").on("click", function () {
+            var newSearch = $("#searchInput").val();
+            topics.unshift(newSearch);
+            populateButtons(topics, "searchButton", "#buttonsArea");
+            return false;
+        });
+
+
+        $("#reset").on("click", function() {
+         reset();
+        });
+
+    </script>
+
+
 </body>
 
 </html>
