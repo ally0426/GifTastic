@@ -155,6 +155,7 @@
         $("#addSearch").on("click", function () {
             var newSearch = $("#searchInput").val();
             topics.push(newSearch);
+            $("#searchInput").val("");
             populateButtons(topics, "searchButton", "#buttonsArea");
             return false;
         });
